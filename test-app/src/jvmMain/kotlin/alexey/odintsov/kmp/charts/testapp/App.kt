@@ -6,8 +6,6 @@ import alexey.odintsov.kmp.charts.model.MinMaxEntry
 import alexey.odintsov.kmp.charts.model.StringKey
 import alexey.odintsov.kmp.charts.model.TimeFrame
 import alexey.odintsov.kmp.charts.ui.Chart
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,9 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import charts.test_app.generated.resources.Res
-import charts.test_app.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -66,16 +61,6 @@ fun App() {
                 timeFrame = TimeFrame(0, 10),
                 entries = entries,
             )
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
         }
     }
 }
