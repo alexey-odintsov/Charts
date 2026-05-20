@@ -7,6 +7,7 @@ import alexey.odintsov.charts.model.MinMaxEntry
 import alexey.odintsov.charts.model.StringKey
 import alexey.odintsov.charts.model.TimeFrame
 import alexey.odintsov.charts.ui.Chart
+import alexey.odintsov.charts.ui.ChartStyle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,9 +32,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
         var hoveredEntry by remember { mutableStateOf<ChartEntry<Float>?>(null) }
         var selectedEntry by remember { mutableStateOf<ChartEntry<Float>?>(null) }
+        var isDarkChart by remember { mutableStateOf<Boolean>(false) }
         val entries = remember {
             val key = StringKey("a")
             val key2 = StringKey("b")
@@ -54,12 +55,13 @@ fun App() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Button(onClick = { showContent = !showContent }) {
+            Button(onClick = { isDarkChart = !isDarkChart }) {
                 Text("Click me!")
             }
             Chart(
                 modifier = Modifier.fillMaxWidth().height(300.dp),
                 type = ChartType.MinMax,
+                style = if (isDarkChart) ChartStyle.Dark else ChartStyle.Default,
                 totalTime = TimeFrame(0, 10),
                 timeFrame = TimeFrame(0, 12),
                 entries = entries,
