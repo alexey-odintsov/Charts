@@ -4,21 +4,20 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.vanniktech.mavenPublish)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     id("maven-publish")
 }
 
-group = "alexey.odintsov.kmp"
+group = "alexey.odintsov"
 version = "0.0.1"
 
 kotlin {
     jvm()
 
     androidLibrary {
-        namespace = "alexey.odintsov.kmp.charts"
+        namespace = "alexey.odintsov.charts"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
@@ -53,23 +52,20 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-        }
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.junit)
         }
     }
+}
 
-    mavenPublishing {
-        publishToMavenCentral()
-//        signAllPublications()
-        coordinates(group.toString(), "charts", version.toString())
-
-        pom {
-            name = "Charts"
-            description = "A library."
-            inceptionYear = "2025"
-//            url = "https://github.com/kotlin/multiplatform-library-template/"
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/alexey-odintsov/charts")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: findProperty("gpr.user") as String?
+                password = System.getenv("GITHUB_TOKEN") ?: findProperty("gpr.key") as String?
+            }
         }
     }
 }
