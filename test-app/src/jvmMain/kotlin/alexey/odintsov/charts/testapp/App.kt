@@ -61,9 +61,10 @@ fun App() {
                 modifier = Modifier.fillMaxWidth().height(300.dp),
                 type = ChartType.MinMax,
                 totalTime = TimeFrame(0, 10),
-                timeFrame = TimeFrame(0, 10),
+                timeFrame = TimeFrame(0, 12),
                 entries = entries,
                 hoveredEntry = hoveredEntry,
+                selectedEntry = selectedEntry,
                 onEntryHovered = {
                     hoveredEntry = it
                 },
