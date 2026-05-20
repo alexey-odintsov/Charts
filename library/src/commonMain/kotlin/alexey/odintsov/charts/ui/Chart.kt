@@ -68,20 +68,30 @@ fun <T> Chart(
     Box {
         Spacer(
             modifier = modifier.fillMaxSize().background(style.backgroundColor).clipToBounds()
-//                .onPointerEvent(PointerEventType.Enter) {
-//                    isCursorInsideChart = true
-//                }
-//                .onPointerEvent(PointerEventType.Exit) {
-//                    isCursorInsideChart = false
-//                }
                 .onSizeChanged { size ->
                     usSize = size.width.toFloat() / timeFrame.duration
                 }
-//                .onPointerEvent(PointerEventType.Move) { event ->
-//                    localCursorPosition = event.changes.first().position
-//                    val hoveredEvent = positionCache.getNearestEntry(localCursorPosition)
-//                    onEntryHovered?.invoke(hoveredEvent)
-//                }
+                .pointerInput(onEntryHovered, entries, timeFrame) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            when (event.type) {
+                                PointerEventType.Enter -> isCursorInsideChart = true
+                                PointerEventType.Exit -> {
+                                    isCursorInsideChart = false
+                                    onEntryHovered?.invoke(null)
+                                }
+
+                                PointerEventType.Move -> {
+                                    localCursorPosition = event.changes.first().position
+                                    val hoveredEvent =
+                                        positionCache.getNearestEntry(localCursorPosition)
+                                    onEntryHovered?.invoke(hoveredEvent)
+                                }
+                            }
+                        }
+                    }
+                }
                 .pointerInput("chart-selection", entries, timeFrame) {
                     detectTapGestures(
                         onPress = { offset ->

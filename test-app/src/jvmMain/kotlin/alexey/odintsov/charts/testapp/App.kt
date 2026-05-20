@@ -1,5 +1,6 @@
 package alexey.odintsov.charts.testapp
 
+import alexey.odintsov.charts.model.ChartEntry
 import alexey.odintsov.charts.model.ChartType
 import alexey.odintsov.charts.model.MinMaxChartData
 import alexey.odintsov.charts.model.MinMaxEntry
@@ -31,6 +32,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
+        var hoveredEntry by remember { mutableStateOf<ChartEntry<Float>?>(null) }
+        var selectedEntry by remember { mutableStateOf<ChartEntry<Float>?>(null) }
         val entries = remember {
             val key = StringKey("a")
             val key2 = StringKey("b")
@@ -60,7 +63,15 @@ fun App() {
                 totalTime = TimeFrame(0, 10),
                 timeFrame = TimeFrame(0, 10),
                 entries = entries,
+                hoveredEntry = hoveredEntry,
+                onEntryHovered = {
+                    hoveredEntry = it
+                },
+                onEntrySelected = {
+                    selectedEntry = it
+                }
             )
+            Text("Selected entry: ${selectedEntry?.getText() ?: "none"}")
         }
     }
 }
