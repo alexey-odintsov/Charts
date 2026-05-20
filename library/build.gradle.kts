@@ -7,17 +7,19 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    id("maven-publish")
+    alias(libs.plugins.vanniktech.mavenPublish)
 }
 
-group = "alexey.odintsov"
+group = "io.github.alexey-odintsov"
+val artifact = "charts"
 version = "0.0.1"
 
 kotlin {
     jvm()
+    withSourcesJar(publish = false)
 
     androidLibrary {
-        namespace = "alexey.odintsov.charts"
+        namespace = "io.github.alexey_odintsov.charts"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
@@ -31,7 +33,7 @@ kotlin {
             compileTaskProvider.configure {
                 compilerOptions {
                     jvmTarget.set(
-                        JvmTarget.JVM_11
+                        JvmTarget.JVM_17
                     )
                 }
             }
@@ -57,15 +59,34 @@ kotlin {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/alexey-odintsov/charts")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: findProperty("gpr.user") as String?
-                password = System.getenv("GITHUB_TOKEN") ?: findProperty("gpr.key") as String?
+mavenPublishing {
+    publishToMavenCentral()
+
+    signAllPublications()
+
+    coordinates(group.toString(), artifact, version.toString())
+
+    pom {
+        name = "KMP Charts library"
+        description = "KMP Charts library."
+        inceptionYear = "2026"
+        url = "https://github.com/alexey-odintsov/Charts"
+        licenses {
+            license {
+                name = "MIT License"
             }
+        }
+        developers {
+            developer {
+                id = "alexey-odintsov"
+                name = "Alexey Odintsov"
+                url = "https://github.com/alexey-odintsov/"
+            }
+        }
+        scm {
+            url = "https://github.com/alexey-odintsov/Charts"
+            connection = "scm:git:git://github.com/alexey-odintsov/Charts.git"
+            developerConnection = "scm:git:ssh://git@github.com/alexey-odintsov/Charts.git"
         }
     }
 }
