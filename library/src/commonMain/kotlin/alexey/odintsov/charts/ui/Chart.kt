@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -61,7 +62,7 @@ fun <T> Chart(
 ) {
     var usSize by remember { mutableStateOf(1f) }
     val textMeasurer = rememberTextMeasurer()
-    val positionCache = remember { PositionCache<T>() }
+    val positionCache = remember(entries, type) { PositionCache<T>() }
     var localCursorPosition by remember { mutableStateOf(Offset.Zero) }
     var isCursorInsideChart by remember { mutableStateOf(false) }
 
@@ -108,6 +109,7 @@ fun <T> Chart(
                     }
                 }.drawWithCache {
                     onDrawBehind {
+                        positionCache.clear()
                         renderCenterLine()
                         if (entries == null || entries.isEmpty()) {
                             renderEmptyMessage(textMeasurer, style)
@@ -139,7 +141,9 @@ fun <T> Chart(
             Text(
                 text = hoveredEntry.getText(),
                 color = if (style == ChartStyle.Default) Color.Black else Color.White,
-                modifier = Modifier.absoluteOffset(xDp, yDp - 20.dp).background(if (style == ChartStyle.Default) Color.White else Color.Black)
+                modifier = Modifier.absoluteOffset(xDp, yDp - 20.dp)
+                    .background(if (style == ChartStyle.Default) Color.White else Color.Black)
+                    .padding(horizontal = 2.dp)
             )
         }
     }

@@ -12,6 +12,10 @@ class PositionCache<T> {
         cache[Pair(key, timestamp)] = Pair(offset, entry)
     }
 
+    fun clear() {
+        cache.clear()
+    }
+
     fun get(key: ChartKey, timestamp: Long): Pair<Offset, ChartEntry<T>>? {
         return cache[Pair(key, timestamp)]
     }

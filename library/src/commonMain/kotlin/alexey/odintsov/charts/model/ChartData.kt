@@ -4,7 +4,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateMapOf
 
 @Stable
-interface ChartData<T> {
+interface ChartData<out T> {
     fun isEmpty(): Boolean
     fun getKeys(): List<ChartKey>
     fun getEntries(key: ChartKey): List<ChartEntry<T>>?
