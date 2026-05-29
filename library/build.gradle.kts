@@ -33,7 +33,7 @@ kotlin {
             compileTaskProvider.configure {
                 compilerOptions {
                     jvmTarget.set(
-                        JvmTarget.JVM_17
+                        JvmTarget.JVM_21
                     )
                 }
             }
