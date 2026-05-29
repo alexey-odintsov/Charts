@@ -12,7 +12,7 @@ plugins {
 
 group = "io.github.alexey-odintsov"
 val artifact = "charts"
-version = "0.0.2"
+version = "0.0.3"
 
 kotlin {
     jvm()
@@ -42,12 +42,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            api(libs.jetbrains.compose.runtime)
+            api(libs.jetbrains.compose.ui)
+
+            implementation(libs.jetbrains.compose.foundation)
+            implementation(libs.jetbrains.compose.material3)
+            implementation(libs.jetbrains.compose.ui.tooling.preview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.kotlin.datetime)

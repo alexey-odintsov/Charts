@@ -2,7 +2,7 @@ package alexey.odintsov.charts.model
 
 import alexey.odintsov.charts.formatFloat
 
-interface ChartEntry<T> {
+interface ChartEntry<out T> {
     val timestamp: Long
     val data: T?
 
