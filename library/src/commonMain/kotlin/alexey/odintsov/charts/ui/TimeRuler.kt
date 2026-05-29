@@ -34,6 +34,7 @@ fun TimeRuler(
     timeTotal: TimeFrame,
     timeFrame: TimeFrame,
     debug: Boolean = false,
+    timeZone: TimeZone = TimeZone.UTC,
 ) {
     val textMeasurer = rememberTextMeasurer()
     Canvas(modifier = modifier.height(40.dp).clipToBounds()) {
@@ -73,7 +74,7 @@ fun TimeRuler(
             )
             if (i % 10 == 0 && currentUs >= timeFrame.timeStart) {
                 val measuredText = textMeasurer.measure(
-                    text = currentUs.toUtcString(),
+                    text = currentUs.toUtcString(timeZone),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = TextStyle(color = Color.Gray, fontSize = 10.sp)
@@ -92,10 +93,11 @@ private val UTC_FMT = LocalDateTime.Format {
 }
 
 @OptIn(ExperimentalTime::class)
-fun Long.toUtcString(): String =
-    Instant.fromEpochMilliseconds(this)
-        .toLocalDateTime(TimeZone.UTC)
+fun Long.toUtcString(timeZone: TimeZone): String {
+    return Instant.fromEpochSeconds(this / 1_000_000L, (this % 1_000_000L) * 1000L)
+        .toLocalDateTime(timeZone)
         .let { UTC_FMT.format(it) }
+}
 
 private fun calculateStepUs(usPerPx: Float): Long {
     val minLabelSpacingPx = 150

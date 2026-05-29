@@ -12,7 +12,7 @@ plugins {
 
 group = "io.github.alexey-odintsov"
 val artifact = "charts"
-version = "0.0.3"
+version = "0.0.4"
 
 kotlin {
     jvm()
