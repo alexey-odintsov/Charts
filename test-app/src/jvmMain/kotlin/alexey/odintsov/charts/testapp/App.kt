@@ -46,6 +46,7 @@ fun App() {
             ChartInfo.getEventsData(),
             ChartInfo.getStateData(),
             ChartInfo.getSingleStateData(),
+            ChartInfo.getSingleStateDataCustomKeys(),
             ChartInfo.getDurationData(),
         )
     }
@@ -67,7 +68,7 @@ fun App() {
                 var expanded by remember { mutableStateOf(false) }
                 Box {
                     Button(onClick = { expanded = true }) {
-                        Text("Chart: ${chartsInfo[index].chartType}")
+                        Text("Chart: ${chartsInfo[index].title}")
                     }
                     DropdownMenu(
                         expanded = expanded,
@@ -75,7 +76,7 @@ fun App() {
                     ) {
                         chartsInfo.forEachIndexed { i, info ->
                             DropdownMenuItem(
-                                text = { Text(info.chartType.name) },
+                                text = { Text(info.title) },
                                 onClick = {
                                     index = i
                                     expanded = false
@@ -123,7 +124,8 @@ fun App() {
                 },
                 onEntrySelected = {
                     selectedEntry = it
-                })
+                },
+                customKeys = chartsInfo[index].customKeys)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -139,7 +141,7 @@ fun App() {
                     }
                 }
             }
-            Text("Selected entry: ${selectedEntry?.getText() ?: "none"}")
+            Text("Selected entry: ${selectedEntry?.getText(chartsInfo[index].customKeys) ?: "none"}")
         }
     }
 }
