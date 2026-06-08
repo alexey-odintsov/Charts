@@ -58,12 +58,14 @@ internal fun DrawScope.renderLabels(
     labelsTextStyle: TextStyle,
     labelsPostfix: String,
     verticalPadding: Float,
+    customKeys: Map<String, String>? = null,
 ) {
     var maxWidth = 0
     var maxHeight = 0
     labels.forEachIndexed { i, label ->
+        val displayedLabel = customKeys?.get(label)?.let { "$it ($label)" } ?: label
         val maxValueResult =
-            textMeasurer.measure(text = "$label$labelsPostfix", style = labelsTextStyle)
+            textMeasurer.measure(text = "$displayedLabel$labelsPostfix", style = labelsTextStyle)
         maxHeight = maxValueResult.size.height
         if (maxValueResult.size.width > maxWidth) {
             maxWidth = maxValueResult.size.width
@@ -73,10 +75,11 @@ internal fun DrawScope.renderLabels(
     val labelSize = Size(maxWidth.toFloat(), maxHeight.toFloat())
 
     labels.forEachIndexed { i, label ->
+        val displayedLabel = customKeys?.get(label)?.let { "$it ($label)" } ?: label
         val y = calculateY(i, labels.size, size.height, verticalPadding)
         drawText(
             textMeasurer = textMeasurer,
-            text = "$label$labelsPostfix",
+            text = "$displayedLabel$labelsPostfix",
             style = labelsTextStyle,
             topLeft = Offset(3.dp.toPx(), y - maxHeight / 2f),
             overflow = TextOverflow.Clip,

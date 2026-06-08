@@ -73,3 +73,36 @@ fun PreviewDurationChart() {
         )
     }
 }
+
+@OptIn(ExperimentalTime::class)
+@Preview
+@Composable
+fun PreviewDurationChartCustomKeys() {
+    val now = Clock.System.now().toEpochMilliseconds() * 1000L
+    val app1 = StringKey("app1")
+
+    val chartData = DurationChartData<String>()
+    chartData.addEntry(app1,
+        DurationEntry(now + 500_000L, "start", end = null, "")
+    )
+    chartData.addEntry(app1,
+        DurationEntry(now + 1_500_000L, null, end = "stop", "")
+    )
+
+    Column(Modifier.fillMaxSize().background(Color.LightGray)) {
+        Chart(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            style = ChartStyle.Default,
+            totalTime = TimeFrame(now, now + 2_000_000L),
+            timeFrame = TimeFrame(now, now + 2_000_000L),
+            entries = chartData,
+            onDragged = {},
+            type = ChartType.Duration,
+            customKeys = mapOf(
+                "app1" to "Primary Application",
+                "start" to "Initiated",
+                "stop" to "Terminated"
+            )
+        )
+    }
+}

@@ -79,3 +79,32 @@ fun PreviewEventsChart() {
         )
     }
 }
+
+@OptIn(ExperimentalTime::class)
+@Preview
+@Composable
+fun PreviewEventsChartCustomKeys() {
+    val now = Clock.System.now().toEpochMilliseconds() * 1000L
+    val app1 = StringKey("app1")
+    val app2 = StringKey("app2")
+
+    val chartData = EventsChartData<String>()
+    chartData.addEntry(app1, EventEntry(now + 500_000L, "Crash", ""))
+    chartData.addEntry(app2, EventEntry(now + 1_000_000L, "ANR", ""))
+
+    Column(Modifier.fillMaxSize().background(Color.LightGray)) {
+        Chart(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            style = ChartStyle.Default,
+            totalTime = TimeFrame(now, now + 2_000_000L),
+            timeFrame = TimeFrame(now, now + 2_000_000L),
+            entries = chartData,
+            onDragged = {},
+            type = ChartType.Events,
+            customKeys = mapOf(
+                "Crash" to "Fatal Error",
+                "ANR" to "App Not Responding"
+            )
+        )
+    }
+}

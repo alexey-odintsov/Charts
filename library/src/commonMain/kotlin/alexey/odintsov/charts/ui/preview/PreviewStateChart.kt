@@ -79,3 +79,36 @@ fun PreviewStateChart() {
         )
     }
 }
+
+@OptIn(ExperimentalTime::class)
+@Preview
+@Composable
+fun PreviewStateChartCustomKeys() {
+    val now = Clock.System.now().toEpochMilliseconds() * 1000L
+    val app1 = StringKey("app1")
+
+    val chartData = StateChartData<String>()
+    chartData.addEntry(app1,
+        StateEntry(now + 500_000L, "0", "1", "")
+    )
+    chartData.addEntry(app1,
+        StateEntry(now + 1_500_000L, "1", "2", "")
+    )
+
+    Column(Modifier.fillMaxSize().background(Color.LightGray)) {
+        Chart(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            style = ChartStyle.Default,
+            totalTime = TimeFrame(now, now + 2_000_000L),
+            timeFrame = TimeFrame(now, now + 2_000_000L),
+            entries = chartData,
+            onDragged = {},
+            type = ChartType.State,
+            customKeys = mapOf(
+                "0" to "Idle",
+                "1" to "Running",
+                "2" to "Stopped"
+            )
+        )
+    }
+}

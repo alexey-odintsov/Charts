@@ -6,7 +6,7 @@ interface ChartEntry<out T> {
     val timestamp: Long
     val data: T?
 
-    fun getText(): String
+    fun getText(customKeys: Map<String, String>? = null): String
 }
 
 data class PercentageEntry<T>(
@@ -14,7 +14,7 @@ data class PercentageEntry<T>(
     val value: Float,
     override val data: T? = null
 ) : ChartEntry<T> {
-    override fun getText(): String {
+    override fun getText(customKeys: Map<String, String>?): String {
         return formatFloat(value, 2)
     }
 }
@@ -24,7 +24,7 @@ data class MinMaxEntry<T>(
     val value: Float,
     override val data: T? = null
 ) : ChartEntry<T> {
-    override fun getText(): String {
+    override fun getText(customKeys: Map<String, String>?): String {
         return formatFloat(value, 2)
     }
 }
@@ -35,8 +35,10 @@ data class DurationEntry<T>(
     val end: String?,
     override val data: T? = null
 ) : ChartEntry<T> {
-    override fun getText(): String {
-        return if (begin != null && end != null) "$begin -> $end" else begin ?: (end ?: "")
+    override fun getText(customKeys: Map<String, String>?): String {
+        val b = customKeys?.get(begin)?.let { "$it ($begin)" } ?: begin
+        val e = customKeys?.get(end)?.let { "$it ($end)" } ?: end
+        return if (b != null && e != null) "$b -> $e" else b ?: (e ?: "")
     }
 }
 
@@ -45,8 +47,8 @@ data class EventEntry<T>(
     val event: String,
     override val data: T? = null
 ) : ChartEntry<T> {
-    override fun getText(): String {
-        return event
+    override fun getText(customKeys: Map<String, String>?): String {
+        return customKeys?.get(event)?.let { "$it ($event)" } ?: event
     }
 }
 
@@ -56,8 +58,10 @@ data class StateEntry<T>(
     val newState: String,
     override val data: T? = null
 ) : ChartEntry<T> {
-    override fun getText(): String {
-        return "$oldState -> $newState"
+    override fun getText(customKeys: Map<String, String>?): String {
+        val old = customKeys?.get(oldState)?.let { "$it ($oldState)" } ?: oldState
+        val new = customKeys?.get(newState)?.let { "$it ($newState)" } ?: newState
+        return "$old -> $new"
     }
 }
 
@@ -66,7 +70,7 @@ data class SingleStateEntry<T>(
     val state: String,
     override val data: T? = null
 ) : ChartEntry<T> {
-    override fun getText(): String {
-        return state
+    override fun getText(customKeys: Map<String, String>?): String {
+        return customKeys?.get(state)?.let { "$it ($state)" } ?: state
     }
 }
