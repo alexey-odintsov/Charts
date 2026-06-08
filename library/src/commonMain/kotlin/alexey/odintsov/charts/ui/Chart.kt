@@ -42,6 +42,26 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 
 
+/**
+ * A highly customizable chart component for displaying various types of data over time.
+ *
+ * @param T The type of the data associated with each chart entry.
+ * @param modifier The modifier to be applied to the chart's container.
+ * @param style The visual style configuration for the chart, including colors and text styles.
+ * @param totalTime The full time range (min and max timestamps) that the chart can potentially display.
+ * @param timeFrame The currently visible time range on the chart.
+ * @param entries The data entries to be rendered in the chart.
+ * @param onDragged A callback invoked when the user drags the chart, providing the drag amount in time units.
+ * @param type The [ChartType] specifying how the data should be visualized (e.g., Percentage, MinMax, Events).
+ * @param labelsCount The target number of labels to display on the Y-axis (primarily for numeric charts).
+ * @param labelsPostfix A string to append to the end of Y-axis labels (e.g., units like "%" or "ms").
+ * @param highlightedKey An optional [ChartKey] to highlight a specific data series.
+ * @param selectedEntry The entry that is currently selected in the chart.
+ * @param hoveredEntry The entry that is currently being hovered over by the pointer.
+ * @param onEntrySelected A callback invoked when a chart entry is clicked or tapped.
+ * @param onEntryHovered A callback invoked when the hover state of an entry changes.
+ * @param customKeys An optional map for translating internal keys or values (like state IDs) into human-readable labels.
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun <T> Chart(
@@ -59,6 +79,7 @@ fun <T> Chart(
     hoveredEntry: ChartEntry<T>? = null,
     onEntrySelected: ((ChartEntry<T>) -> Unit)? = null,
     onEntryHovered: ((ChartEntry<T>?) -> Unit)? = null,
+    customKeys: Map<String, String>? = null,
 ) {
     var usSize by remember { mutableStateOf(1f) }
     val textMeasurer = rememberTextMeasurer()
@@ -130,7 +151,15 @@ fun <T> Chart(
                             hoveredEntry,
                             positionCache,
                         )
-                        renderLabels(type, labelsSize, textMeasurer, style, entries, labelsPostfix)
+                        renderLabels(
+                            type,
+                            labelsSize,
+                            textMeasurer,
+                            style,
+                            entries,
+                            labelsPostfix,
+                            customKeys
+                        )
                     }
                 })
 
@@ -139,7 +168,7 @@ fun <T> Chart(
             val xDp = with(density) { localCursorPosition.x.toDp() }
             val yDp = with(density) { localCursorPosition.y.toDp() }
             Text(
-                text = hoveredEntry.getText(),
+                text = hoveredEntry.getText(customKeys),
                 color = if (style == ChartStyle.Default) Color.Black else Color.White,
                 modifier = Modifier.absoluteOffset(xDp, yDp - 20.dp)
                     .background(if (style == ChartStyle.Default) Color.White else Color.Black)
@@ -155,7 +184,8 @@ private fun <T> DrawScope.renderLabels(
     textMeasurer: TextMeasurer,
     style: ChartStyle,
     entries: ChartData<T>,
-    labelsPostfix: String
+    labelsPostfix: String,
+    customKeys: Map<String, String>? = null,
 ) {
     when (type) {
         ChartType.Percentage -> renderLabelsForValue(
@@ -184,6 +214,7 @@ private fun <T> DrawScope.renderLabels(
             style.labelTextStyle,
             labelsPostfix,
             style.verticalPadding.toPx(),
+            customKeys,
         )
     }
 }

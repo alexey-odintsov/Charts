@@ -79,3 +79,63 @@ fun PreviewSingleStateChart() {
         )
     }
 }
+
+
+@OptIn(ExperimentalTime::class)
+@Preview
+@Composable
+fun PreviewSingleStateChartCustomKeys() {
+    val now = Clock.System.now().toEpochMilliseconds() * 1000L
+    val app1 = StringKey("app1")
+    val app2 = StringKey("app2")
+    val service1 = StringKey("service1")
+
+    val chartData = SingleStateChartData<String>()
+    chartData.addEntry(app1,
+        SingleStateEntry(now + 500_000L, "0", "")
+    )
+    chartData.addEntry(app1,
+        SingleStateEntry(now + 700_000L, "1", "")
+    )
+    chartData.addEntry(app2,
+        SingleStateEntry(now + 900_000L, "0", "")
+    )
+    chartData.addEntry(app1,
+        SingleStateEntry(now + 1_200_000L, "2", "")
+    )
+    chartData.addEntry(app2,
+        SingleStateEntry(now + 1_400_000L, "1", "")
+    )
+    chartData.addEntry(app1,
+        SingleStateEntry(now + 1_600_000L, "2", "")
+    )
+    chartData.addEntry(service1,
+        SingleStateEntry(now + 1_800_000L, "1", "")
+    )
+
+    Column(Modifier.fillMaxSize().background(Color.LightGray)) {
+        Chart(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            style = ChartStyle.Default,
+            totalTime = TimeFrame(now, now + 2_000_000L),
+            timeFrame = TimeFrame(now, now + 2_000_000L),
+            entries = chartData,
+            onDragged = {},
+            labelsCount = 4,
+            type = ChartType.SingleState,
+            highlightedKey = app2,
+            customKeys = mapOf("0" to "Connecting", "1" to "Connected")
+        )
+        Spacer(Modifier.size(4.dp))
+        Chart(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            style = ChartStyle.Dark,
+            totalTime = TimeFrame(now, now + 2_000_000L),
+            timeFrame = TimeFrame(now, now + 2_000_000L),
+            entries = chartData,
+            onDragged = {},
+            type = ChartType.SingleState,
+            highlightedKey = app2,
+        )
+    }
+}
