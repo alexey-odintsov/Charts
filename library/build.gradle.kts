@@ -16,7 +16,7 @@ version = "0.0.5"
 
 kotlin {
     jvm()
-    withSourcesJar(publish = false)
+    withSourcesJar(publish = true)
 
     androidLibrary {
         namespace = "io.github.alexey_odintsov.charts"

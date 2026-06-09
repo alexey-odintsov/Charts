@@ -1,4 +1,4 @@
-package model.ui.preview
+package alexey.odintsov.charts.ui.preview
 
 import alexey.odintsov.charts.model.ChartType
 import alexey.odintsov.charts.model.PercentageChartData
